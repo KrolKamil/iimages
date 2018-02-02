@@ -10,7 +10,6 @@
     {
         private $passwords = array();
 
-        //zrozumiec jak dziala
         private function randomPassword() {
             $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
             $pass = array();
@@ -22,7 +21,7 @@
             return implode($pass);
         }
 
-        private function howManyPasswors()
+        private function howManyPasswords()
         {
             $nr_passwords = $_POST['nr_passwords'];
 
@@ -31,48 +30,62 @@
 
         public function createPasswords()
         {
-            for($i = 0; $i<$this->howManyPasswors(); $i++)
+            if(!empty($_POST['nr_passwords']))
             {
-                $this->passwords[] = $this->randomPassword();
+                for ($i = 0; $i < $this->howManyPasswords(); $i++)
+                {
+                    $this->passwords[] = $this->randomPassword();
+                }
             }
         }
 
         public  function  showPasswords()
         {
-            echo '<table class="table">';
-            echo '<thead>';
-            echo'<tr>';
-                    echo '<th>#</th>';
-                    echo '<th>Passwords</th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            $i = 1;
-            foreach ($this->passwords as $pw)
-            {
+            if(empty(!$this->passwords)) {
+                echo '<table class="table">';
+                echo '<thead>';
                 echo '<tr>';
-                    echo'<th>' . $i . '</th>';
-                    echo'<th>' . $pw . '</th>';
+                echo '<th>#</th>';
+                echo '<th>Passwords</th>';
                 echo '</tr>';
-                $i++;
+                echo '</thead>';
+                echo '<tbody>';
+                $i = 1;
+                foreach ($this->passwords as $pw) {
+                    echo '<tr>';
+                    echo '<th>' . $i . '</th>';
+                    echo '<th>' . $pw . '</th>';
+                    echo '</tr>';
+                    $i++;
+                }
+                echo '</tbody>';
+                echo '</table>';
             }
-            echo '</tbody>';
-            echo '</table>';
         }
 
-        public function redirect()
+        public function ifRedirect()
         {
-            $if_admin = false;
-            foreach($_SESSION['account'] as $role)
+            if(isset($_SESSION['account_id']))
             {
-                if($role == 'administrator')
+                $if_admin = false;
+                foreach ($_SESSION['account'] as $role)
                 {
-                    $if_admin = true;
+                    if ($role == 'administrator')
+                    {
+                        $if_admin = true;
+                        break;
+                    }
+                }
+                if($if_admin == false)
+                {
+                    header("Location: /iimages/");
+                    exit;
                 }
             }
-            if($if_admin == false)
+            else
             {
-                header("Location: /iimages/index.php");
+                header("Location: /iimages/");
+                exit;
             }
         }
     }
@@ -94,6 +107,8 @@
         <div class="col-sm-6">
             <?php
                $createPassword = new passwordGenerator();
+
+               $createPassword->ifRedirect();
 
                $createPassword->createPasswords();
 

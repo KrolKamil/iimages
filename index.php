@@ -3,26 +3,30 @@
 
     class Redirect
     {
-        public function ifRedirec()
+        public function ifRedirect()
         {
-            $if_admin = false;
-            foreach($_SESSION['account'] as $role)
+            if(isset($_SESSION['account_id']))
             {
-                if($role == 'administrator')
-                {
-                    $if_admin = true;
+                foreach ($_SESSION['account'] as $role) {
+                    if ($role == 'administrator') {
+                        header("Location: /iimages/control.php");
+                        exit;
+                    }
                 }
-            }
-            if($if_admin == true)
-            {
-                header("Location: /iimages/control.php");
+
+                foreach ($_SESSION['account'] as $role) {
+                    if ($role == 'user') {
+                        header("Location: /iimages/game.php");
+                        exit;
+                    }
+                }
             }
         }
     }
 
-    $rd = new Redirect();
+    $myRedirect = new Redirect();
 
-    //$rd->ifRedirec();
+    $myRedirect->ifRedirect();
 ?>
 <!DOCTYPE html>
 <html>
