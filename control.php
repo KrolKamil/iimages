@@ -94,7 +94,9 @@ class Session
             Hello Mr Admin.<br>
             <a href="/iimages/passwords.php">Password Generator</a><br>
 
-            <a href="/iimages/logout.php"><button>Logout</button></a>
+            <a href="/iimages/upload.php">Upload Images</a><br>
+
+            <a href="/iimages/logout.php"><button type="submit" class="btn">Logout</button></a>
 
             <?php
             $session = new Session();

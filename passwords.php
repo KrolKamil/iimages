@@ -36,10 +36,36 @@
                 {
                     $this->passwords[] = $this->randomPassword();
                 }
+                $this->sendPasswords();
             }
         }
 
-        public  function  showPasswords()
+        private function sendPasswords()
+        {
+            global $conn;
+
+            foreach($this->passwords as $password)
+            {
+                $pswd_hash = password_hash($password,PASSWORD_DEFAULT);
+                $sql = "INSERT INTO users VALUES('', '$pswd_hash')";
+
+                $conn->query($sql);
+
+                $sql = "SELECT LAST_INSERT_ID()";
+
+                $query_id = $conn->query($sql);
+
+                while ($id = $query_id->fetch_array(MYSQLI_NUM))
+                {
+
+                    $sql = "INSERT INTO user_roles VALUES('$id[0]',2)";
+
+                    $conn->query($sql);
+                }
+            }
+        }
+
+        public function  showPasswords()
         {
             if(empty(!$this->passwords)) {
                 echo '<table class="table">';
@@ -60,6 +86,30 @@
                 }
                 echo '</tbody>';
                 echo '</table>';
+            }
+        }
+
+        public function deleteAllUsers()
+        {
+            if(!empty($_POST['delete']))
+            {
+                global $conn;
+
+                $sql = "SELECT users.id FROM users INNER JOIN user_roles ON users.id = user_roles.user_id WHERE user_roles.role_id = 2";
+
+                $users_id = $conn->query($sql);
+
+                while ($id = $users_id->fetch_array(MYSQLI_NUM))
+                {
+
+                    $sql = "DELETE FROM users WHERE id = '$id[0]'";
+
+                    $conn->query($sql);
+                }
+
+                $sql = "DELETE FROM user_roles WHERE role_id = 2";
+
+                $conn->query($sql);
             }
         }
 
@@ -101,9 +151,18 @@
                 </div>
                 <button type="submit" class="btn">Submit</button>
             </form>
+            <br><br><br><br><br>
+            <form action="passwords.php" method="post">
+                <input type="hidden" name="delete" value="1">
+                <button type="sumbit" class="btn btn-danger">DELETE ALL USERS</button>
+            </form>
+
+            <br><br>
+            <a href="/iimages/control.php"><button type="button" class="btn">Back</button></a>
+            <br><br>
+            <a href="/iimages/logout.php"><button type="button" class="btn">Logout</button></a>
 
         </div>
-
         <div class="col-sm-6">
             <?php
                $createPassword = new passwordGenerator();
@@ -114,7 +173,7 @@
 
                $createPassword->showPasswords();
 
-
+               $createPassword->deleteAllUsers();
 
             ?>
         </div>
