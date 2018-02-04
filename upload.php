@@ -8,25 +8,60 @@ include 'resources/head.php';
 
 class Upload
 {
-    //I FUCK UP IMAGES TABLE AND SENDING IMAGES
+    //I FUCK UP IMAGES TABLE AND SENDING IMAGESd
     public function UploadData()
     {
         global $conn;
-        
+
         if(isset($_POST['send']))
         {
-            $image = $_FILES['image']['tmp_name'];
-            $image_name = $_FILES['image']['name'];
-            $sql = "INSERT INTO images VALUES('','$image','$image_name')";
+            if (!file_exists($_FILES['image']['tmp_name']) || !is_uploaded_file($_FILES['image']['tmp_name']))
+            {
+                echo "Can't upload no existing file.";
+            }
+            else
+            {
+                $image = $_FILES['image']['name'];
 
-            $conn->query($sql);
+                $target = "resources/images/" . basename($image);
+
+                $sql = "INSERT INTO images VALUES('','$image')";
+
+                $conn->query($sql);
+
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $target))
+                {
+                    echo "Image uploaded successfully";
+                }
+                else
+                {
+                    echo "Failed to upload image";
+                }
+            }
+
         }
     }
+
+
+    public function showImages()
+    {
+        global $conn;
+
+        $sql = "SELECT * FROM images";
+
+        if($images = $conn->query($sql))
+        {
+            while ($image = $images->fetch_array(MYSQLI_NUM)) {
+
+                echo "<img src='resources/images/" . $image[1] . "' >";
+
+            }
+        }
+    }
+
+
+
 }
-
-$myUploadData = new Upload();
-
-$myUploadData->UploadData();
 
 ?>
 <body>
@@ -45,11 +80,18 @@ $myUploadData->UploadData();
             <br>
             <a href="/iimages/control.php"><button type="button" class="btn" name="btn_upload" value="1">Back</button></a>
 
+            <?php
+            $myUploadData = new Upload();
+
+            $myUploadData->UploadData();
+            ?>
 
         </div>
 
         <div class="col-sm-6">
-            have no idea why divided
+            <?php
+            $myUploadData->showImages();
+            ?>
         </div>
     </div>
 
