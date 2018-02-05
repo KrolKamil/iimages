@@ -6,6 +6,11 @@ session_start();
 <?php
 include "resources/head.php";
 
+//IDZE JAK KREW Z NOSA
+//TUTAJ SKONCZYLEM
+// DO DOROBIENIA:
+// WYBIERANIE OBRAZKOW I ROZGRYWKA
+
 class Game
 {
     public function playGame()
@@ -45,7 +50,7 @@ class Game
 
         while ($image = $images->fetch_array(MYSQLI_NUM))
         {
-            echo "<img src='resources/images/" . $image[0] . " ' >";
+            echo "<img src='resources/images/" . $image[0] . "' id=img >";
         }
     }
 
@@ -61,7 +66,7 @@ class Game
 
         while ($image = $images->fetch_array(MYSQLI_NUM))
         {
-            echo "<img src='resources/images/" . $image[0] . " ' >";
+            echo "<img src='resources/images/" . $image[0] . " ' id=img_winner>";
         }
     }
 }
@@ -80,6 +85,7 @@ $myGame->playGame();
                 $myGame->showWinnerImage();
                 ?>
 
+                <button type="submit" class="btn">Send</button>
             </form>
         </div>
         <div class="col-sm-6">
@@ -89,6 +95,7 @@ $myGame->playGame();
                 $myGame->showImage();
                 ?>
 
+                <button type="submit" class="btn">Send</button>
             </form>
         </div>
     </div>
