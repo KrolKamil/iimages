@@ -15,10 +15,10 @@ class Game
 {
     public function playGame()
     {
-        //if(!isset($_SESSION['winner']))
-        //{
-            global $conn;
+        global $conn;
 
+        if(!isset($_SESSION['winner']))
+        {
             $sql = "SELECT id FROM images";
 
             $result = $conn->query($sql);
@@ -35,7 +35,89 @@ class Game
             array_splice($images_id,0,1);
 
             $_SESSION['images_id'] = $images_id;
-        //}
+        }
+        else
+        {
+            if(count($_SESSION['images_id']) > 1)
+            {
+                $winner_id = $_POST['winner'];
+
+                $_SESSION['winner'] = $winner_id;
+
+                array_splice($_SESSION['images_id'],0,1);
+            }
+            else
+            {
+                //INSERTING WINNER IMAGE ID TO DB
+                $winner_id = $_SESSION['winner'];
+
+                $sql = "SELECT id FROM images_winners WHERE img_id = '$winner_id'";
+
+                if($conn->query($sql)->num_rows > 0)
+                {
+                    $sql = "UPDATE images_winners SET count_chosen = count_chosen + 1 WHERE img_id = '$winner_id'";
+
+                    $conn->query($sql);
+                }
+                else
+                {
+                    $sql = "INSERT INTO images_winners VALUES('', '$winner_id', 1)";
+
+                    $conn->query($sql);
+                }
+                //DELETING USER AFTER GAME
+
+                $if_admin = false;
+                foreach ($_SESSION['account'] as $role)
+                {
+                    if ($role == 'administrator')
+                    {
+                        $if_admin = true;
+                        break;
+                    }
+                }
+
+                if($if_admin == false)
+                {
+                    //DELETING USER
+
+                    $user_id = $_SESSION['account_id'];
+
+                    $sql = "DELETE FROM users WHERE id = '$user_id'";
+
+                    $conn->query($sql);
+
+                    $sql = "DELETE FROM user_roles WHERE user_id = '$user_id'";
+
+                    $conn->query($sql);
+
+
+                    if (ini_get("session.use_cookies")) {
+                        $params = session_get_cookie_params();
+                        setcookie(session_name(), '', time() - 42000,
+                            $params["path"], $params["domain"],
+                            $params["secure"], $params["httponly"]
+                        );
+                    }
+
+                    session_destroy();
+
+                    header("Location: /iimages/");
+                    exit;
+                }
+                else
+                {
+                    unset($_SESSION['images_id']);
+                    unset($_SESSION['winner']);
+                    header("Location: /iimages/");
+                    exit;
+                }
+
+
+
+            }
+        }
+
     }
 
     public function showImage()
@@ -44,13 +126,14 @@ class Game
 
         $id = $_SESSION['images_id'][0];
 
-        $sql = "SELECT image FROM images WHERE id = '$id'";
+        $sql = "SELECT * FROM images WHERE id = '$id'";
 
         $images = $conn->query($sql);
 
         while ($image = $images->fetch_array(MYSQLI_NUM))
         {
-            echo "<img src='resources/images/" . $image[0] . "' id=img >";
+            echo '<img src="resources/images/' . $image[1] . '" name="img" id="img" >';
+            echo '<input type=hidden value ="'  . $image[0] . '" name="winner" >';
         }
     }
 
@@ -60,18 +143,30 @@ class Game
 
         $id = $_SESSION['winner'];
 
-        $sql = "SELECT image FROM images WHERE id = '$id'";
+        $sql = "SELECT * FROM images WHERE id = '$id'";
 
         $images = $conn->query($sql);
 
         while ($image = $images->fetch_array(MYSQLI_NUM))
         {
-            echo "<img src='resources/images/" . $image[0] . " ' id=img_winner>";
+            echo '<img src="resources/images/' . $image[1] . '" name="img_winner" id="img">';
+            echo '<input type=hidden value ="'  . $image[0] . '" name="winner" >';
+        }
+    }
+
+    public function ifRedirect()
+    {
+        if(!isset($_SESSION['account_id']))
+        {
+            header("Location: /iimages/");
+            exit;
         }
     }
 }
 
 $myGame = new Game();
+
+$myGame->ifRedirect();
 
 $myGame->playGame();
 

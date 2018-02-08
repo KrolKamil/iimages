@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 04 Lut 2018, 14:10
+-- Czas generowania: 08 Lut 2018, 21:59
 -- Wersja serwera: 10.1.28-MariaDB
 -- Wersja PHP: 7.1.11
 
@@ -38,10 +38,22 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`id`, `image`) VALUES
+(1, '1514609877558.jpg'),
 (2, '636244532401702370.jpg'),
-(5, '1514609877558.jpg'),
-(6, 'j0OjhNg.jpg'),
-(7, 'bayard-wu-four-horsemen-of-the-apocalypse.jpg');
+(3, 'bayard-wu-fallen-dragon-02.jpg'),
+(4, 'bayard-wu-four-horsemen-of-the-apocalypse.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `images_winners`
+--
+
+CREATE TABLE `images_winners` (
+  `id` int(11) NOT NULL,
+  `img_id` int(11) NOT NULL,
+  `count_chosen` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
 
@@ -109,6 +121,12 @@ ALTER TABLE `images`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `images_winners`
+--
+ALTER TABLE `images_winners`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -128,7 +146,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT dla tabeli `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT dla tabeli `images_winners`
+--
+ALTER TABLE `images_winners`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT dla tabeli `roles`
@@ -140,7 +164,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT dla tabeli `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

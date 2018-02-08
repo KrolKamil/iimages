@@ -115,6 +115,18 @@ class passwordGenerator
             exit;
         }
     }
+
+    public function ifPasswordsAreGenerated()
+    {
+        global $conn;
+
+        $sql = "SELECT * FROM user_roles WHERE role_id = 2";
+
+        if($conn->query($sql)->num_rows > 0)
+        {
+            echo "Some one is still playing";
+        }
+    }
 }
 ?>
 <body>
@@ -148,6 +160,7 @@ class passwordGenerator
         $createPassword->createPasswords();
         $createPassword->showPasswords();
         $createPassword->deleteAllUsers();
+        $createPassword->ifPasswordsAreGenerated();
         ?>
     </div>
 </div>
