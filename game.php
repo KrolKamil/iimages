@@ -35,11 +35,14 @@ class Game
         {
             if(count($_SESSION['images_id']) >= 1)
             {
-                $winner_id = $_POST['winner'];
+                if(isset($_POST['winner']))
+                {
+                    $winner_id = $_POST['winner'];
 
-                $_SESSION['winner'] = $winner_id;
+                    $_SESSION['winner'] = $winner_id;
 
-                array_splice($_SESSION['images_id'],0,1);
+                    array_splice($_SESSION['images_id'],0,1);
+                }
             }
             if(count($_SESSION['images_id']) == 0)
             {
@@ -151,7 +154,19 @@ class Game
 
     public function ifRedirect()
     {
+        global $conn;
+
+        $sql = "SELECT * FROM images";
+
+        $result = $conn->query($sql);
+
         if(!isset($_SESSION['account_id']))
+        {
+            header("Location: /iimages/");
+            exit;
+        }
+
+        if($result->num_rows < 2)
         {
             header("Location: /iimages/");
             exit;

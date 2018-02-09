@@ -29,8 +29,8 @@ img {
 }
 
 #img{
-    width: 600px;
-    height: 500px;
+    min-width: 100%;
+    height: auto;
 }
 
 #img_winner{
@@ -41,6 +41,4 @@ img {
 #img_winners{
     width: 580px;
     height: 500px;
-
-
 }
