@@ -6,11 +6,6 @@ session_start();
 <?php
 include "resources/head.php";
 
-//IDZE JAK KREW Z NOSA
-//TUTAJ SKONCZYLEM
-// DO DOROBIENIA:
-// WYBIERANIE OBRAZKOW I ROZGRYWKA
-
 class Game
 {
     public function playGame()
@@ -38,7 +33,7 @@ class Game
         }
         else
         {
-            if(count($_SESSION['images_id']) > 1)
+            if(count($_SESSION['images_id']) >= 1)
             {
                 $winner_id = $_POST['winner'];
 
@@ -46,7 +41,7 @@ class Game
 
                 array_splice($_SESSION['images_id'],0,1);
             }
-            else
+            if(count($_SESSION['images_id']) == 0)
             {
                 //INSERTING WINNER IMAGE ID TO DB
                 $winner_id = $_SESSION['winner'];

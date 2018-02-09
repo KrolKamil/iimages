@@ -47,6 +47,12 @@
                 <button type="submit" class="btn">Submit</button>
             </form>
 
+            <br>
+
+        </div>
+        <div class="col-sm-6">
+            <h3>Show Winners</h3>
+            <a href="/iimages/winners.php" class="btn btn-info" role="button"> ( ͡~ ͜ʖ ͡°)</a>
         </div>
 
     </div>

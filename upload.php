@@ -77,6 +77,25 @@ class Upload
         }
     }
 
+    public function deleteWinnersImages()
+    {
+        global $conn;
+
+        if(isset($_POST['deleteWinners']))
+        {
+            $sql = "SELECT image FROM images_winners";
+
+            $result = $conn->query($sql);
+
+            if(count($result) > 0)
+            {
+                $sql = "TRUNCATE TABLE images_winners";
+
+                $conn->query($sql);
+            }
+        }
+    }
+
 
 }
 
@@ -103,12 +122,22 @@ class Upload
                 <button type="submit" class="btn btn-danger">DELETE ALL IMAGES</button>
             </form>
 
+            <br><br><br><br>
+            <form action="upload.php" method="post">
+                <input type="hidden" name="deleteWinners" value="1">
+                <button type="submit" class="btn btn-danger">DELETE WINNERS IMAGES</button>
+            </form>
+
+            <br>
+
             <?php
             $myUploadData = new Upload();
 
             $myUploadData->UploadData();
 
             $myUploadData->deleteImages();
+
+            $myUploadData->deleteWinnersImages();
             ?>
 
         </div>

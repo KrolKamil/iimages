@@ -98,6 +98,8 @@ class Session
 
             <a href="/iimages/game.php">Game</a><br>
 
+            <a href="/iimages/winners.php">Winners</a><br>
+
             <a href="/iimages/logout.php"><button type="submit" class="btn">Logout</button></a>
 
             <?php
