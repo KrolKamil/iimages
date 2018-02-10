@@ -1,10 +1,8 @@
 <?php
 session_start();
-?>
-<!DOCTYPE html>
-<html>
-<?php
-include 'resources/head.php';
+
+include 'resources/connection.php';
+
 class passwordGenerator
 {
     private $passwords = array();
@@ -105,13 +103,13 @@ class passwordGenerator
             }
             if($if_admin == false)
             {
-                header("Location: /iimages/");
+                header("Location: index.php");
                 exit;
             }
         }
         else
         {
-            header("Location: /iimages/");
+            header("Location: index.php");
             exit;
         }
     }
@@ -128,6 +126,15 @@ class passwordGenerator
         }
     }
 }
+
+$createPassword = new passwordGenerator();
+$createPassword->ifRedirect();
+
+?>
+<!DOCTYPE html>
+<html>
+<?php
+include 'resources/head.php';
 ?>
 <body>
 <div  class="container">
@@ -142,9 +149,9 @@ class passwordGenerator
         </form>
 
         <br><br>
-        <a href="/iimages/control.php"><button type="button" class="btn">Back</button></a>
+        <a href="control.php"><button type="button" class="btn">Back</button></a>
         <br><br>
-        <a href="/iimages/logout.php"><button type="button" class="btn">Logout</button></a>
+        <a href="logout.php"><button type="button" class="btn">Logout</button></a>
 
         <br><br><br><br><br>
         <form action="passwords.php" method="post">
@@ -155,8 +162,6 @@ class passwordGenerator
     </div>
     <div class="col-sm-6">
         <?php
-        $createPassword = new passwordGenerator();
-        $createPassword->ifRedirect();
         $createPassword->createPasswords();
         $createPassword->showPasswords();
         $createPassword->deleteAllUsers();

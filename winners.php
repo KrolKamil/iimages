@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include 'resources/connection.php';
+
 class Winners
 {
     private function ifShowWinners()

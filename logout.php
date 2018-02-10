@@ -13,8 +13,8 @@ if(isset($_SESSION['account_id']))
 
     session_destroy();
 
-    header("Location: /iimages/");
+    header("Location: index.php");
     exit;
 }
-header("Location: /iimages/");
+header("Location: index.php");
 exit;

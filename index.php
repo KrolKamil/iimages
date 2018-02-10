@@ -1,6 +1,8 @@
 <?php
     session_start();
 
+    include 'resources/connection.php';
+
     class Redirect
     {
         public function ifRedirect()
@@ -9,14 +11,14 @@
             {
                 foreach ($_SESSION['account'] as $role) {
                     if ($role == 'administrator') {
-                        header("Location: /iimages/control.php");
+                        header("Location: control.php");
                         exit;
                     }
                 }
 
                 foreach ($_SESSION['account'] as $role) {
                     if ($role == 'user') {
-                        header("Location: /iimages/game.php");
+                        header("Location: game.php");
                         exit;
                     }
                 }
@@ -52,7 +54,7 @@
         </div>
         <div class="col-sm-6">
             <h3>Show Winners</h3>
-            <a href="/iimages/winners.php" class="btn btn-info" role="button"> ( ͡~ ͜ʖ ͡°)</a>
+            <a href="winners.php" class="btn btn-info" role="button"> ( ͡~ ͜ʖ ͡°)</a>
         </div>
 
     </div>

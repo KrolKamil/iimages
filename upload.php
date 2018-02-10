@@ -1,10 +1,7 @@
 <?php
 session_start();
-?>
-<!DOCTYPE html>
-<html>
-<?php
-include 'resources/head.php';
+
+include 'resources/connection.php';
 
 class Upload
 {
@@ -49,7 +46,7 @@ class Upload
         {
             while ($image = $images->fetch_array(MYSQLI_NUM)) {
 
-                echo "<img src='resources/images/" . $image[1] . " '>";
+                echo '<img src="resources/images/' . $image[1] . '" id="iimages" >';
 
             }
         }
@@ -96,9 +93,43 @@ class Upload
         }
     }
 
-
+    public function ifRedirect()
+    {
+        if(isset($_SESSION['account_id']))
+        {
+            $if_admin = false;
+            foreach ($_SESSION['account'] as $role)
+            {
+                if ($role == 'administrator')
+                {
+                    $if_admin = true;
+                    break;
+                }
+            }
+            if($if_admin == false)
+            {
+                header("Location: index.php");
+                exit;
+            }
+        }
+        else
+        {
+            header("Location: index.php");
+            exit;
+        }
+    }
 }
 
+$myUploadData = new Upload();
+
+$myUploadData->ifRedirect();
+
+
+?>
+<!DOCTYPE html>
+<html>
+<?php
+include 'resources/head.php';
 ?>
 <body>
 <div class="container">
@@ -114,7 +145,7 @@ class Upload
             </form>
 
             <br>
-            <a href="/iimages/control.php"><button type="button" class="btn" name="btn_upload" value="1">Back</button></a>
+            <a href="control.php"><button type="button" class="btn" name="btn_upload" value="1">Back</button></a>
 
             <br><br><br><br>
             <form action="upload.php" method="post">
@@ -131,7 +162,6 @@ class Upload
             <br>
 
             <?php
-            $myUploadData = new Upload();
 
             $myUploadData->UploadData();
 

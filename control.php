@@ -1,10 +1,7 @@
 <?php
     session_start();
-?>
-<!DOCTYPE html>
-<html>
-<?php
-include 'resources/head.php';
+
+    include 'resources/connection.php';
 
 class Setup
 {
@@ -68,7 +65,7 @@ class Setup
         echo '<th>' . $images . '</th>';
         echo '</tr>';
         echo '<tr>';
-        echo '<th>Images</th>';
+        echo '<th>Winners</th>';
         echo '<th>' . $images_winners . '</th>';
         echo '</tr>';
         echo '</tbody>';
@@ -143,44 +140,45 @@ class Session
             }
             if($if_admin == false)
             {
-                header("Location: /iimages/game.php");
+                header("Location: game.php");
                 exit;
             }
         }
         else
         {
-            header("Location: /iimages/");
+            header("Location: index.php");
             exit;
         }
     }
 }
-?>
-<body>
 
+$session = new Session();
+
+$session->logAccount();
+
+$session->ifRedirect();
+
+?>
+<!DOCTYPE html>
+<html>
+<body>
+<?php
+    include 'resources/head.php';
+?>
 <div class="container">
     <h1>Admin Page</h1>
     <div class="row">
         <div class="col-sm-6">
             Hello Mr Admin.<br>
-            <a href="/iimages/passwords.php">Password Generator</a><br>
+            <a href="passwords.php">Password Generator</a><br>
 
-            <a href="/iimages/upload.php">Upload Images</a><br>
+            <a href="upload.php">Upload Images</a><br>
 
-            <a href="/iimages/game.php">Game</a><br>
+            <a href="game.php">Game</a><br>
 
-            <a href="/iimages/winners.php">Winners</a><br>
+            <a href="winners.php">Winners</a><br>
 
-            <a href="/iimages/logout.php"><button type="submit" class="btn">Logout</button></a>
-
-            <?php
-            $session = new Session();
-
-            $session->logAccount();
-
-            $session->ifRedirect();
-
-
-            ?>
+            <a href="logout.php"><button type="submit" class="btn">Logout</button></a>
         </div>
 
         <div class="col-sm-6">

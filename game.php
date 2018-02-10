@@ -1,10 +1,7 @@
 <?php
 session_start();
-?>
-<!DOCTYPE html>
-<html>
-<?php
-include "resources/head.php";
+
+include 'resources/connection.php';
 
 class Game
 {
@@ -100,14 +97,14 @@ class Game
 
                     session_destroy();
 
-                    header("Location: /iimages/");
+                    header("Location: index.php");
                     exit;
                 }
                 else
                 {
                     unset($_SESSION['images_id']);
                     unset($_SESSION['winner']);
-                    header("Location: /iimages/");
+                    header("Location: index.php");
                     exit;
                 }
 
@@ -162,13 +159,13 @@ class Game
 
         if(!isset($_SESSION['account_id']))
         {
-            header("Location: /iimages/");
+            header("Location: index.php");
             exit;
         }
 
         if($result->num_rows < 2)
         {
-            header("Location: /iimages/");
+            header("Location: index.php");
             exit;
         }
     }
@@ -180,6 +177,11 @@ $myGame->ifRedirect();
 
 $myGame->playGame();
 
+?>
+<!DOCTYPE html>
+<html>
+<?php
+include "resources/head.php";
 ?>
 <body>
     <div class="container">
