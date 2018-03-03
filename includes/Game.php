@@ -1,19 +1,17 @@
 <?php
-session_start();
 
-include 'resources/connection.php';
+include 'DatabaseConnection.php';
 
-class Game
+class Game extends DatabaseConnection
 {
     public function playGame()
     {
-        global $conn;
 
         if(!isset($_SESSION['winner']))
         {
             $sql = "SELECT id FROM images";
 
-            $result = $conn->query($sql);
+            $result = $this->connect()->query($sql);
 
             $images_id = array();
 
@@ -48,17 +46,17 @@ class Game
 
                 $sql = "SELECT id FROM images_winners WHERE img_id = '$winner_id'";
 
-                if($conn->query($sql)->num_rows > 0)
+                if($this->connect()->query($sql)->num_rows > 0)
                 {
                     $sql = "UPDATE images_winners SET count_chosen = count_chosen + 1 WHERE img_id = '$winner_id'";
 
-                    $conn->query($sql);
+                    $this->connect()->query($sql);
                 }
                 else
                 {
                     $sql = "INSERT INTO images_winners VALUES('', '$winner_id', 1)";
 
-                    $conn->query($sql);
+                    $this->connect()->query($sql);
                 }
                 //DELETING USER AFTER GAME
 
@@ -80,11 +78,11 @@ class Game
 
                     $sql = "DELETE FROM users WHERE id = '$user_id'";
 
-                    $conn->query($sql);
+                    $this->connect()->query($sql);
 
                     $sql = "DELETE FROM user_roles WHERE user_id = '$user_id'";
 
-                    $conn->query($sql);
+                    $this->connect()->query($sql);
 
 
                     if (ini_get("session.use_cookies")) {
@@ -117,13 +115,12 @@ class Game
 
     public function showImage()
     {
-        global $conn;
 
         $id = $_SESSION['images_id'][0];
 
         $sql = "SELECT * FROM images WHERE id = '$id'";
 
-        $images = $conn->query($sql);
+        $images = $this->connect()->query($sql);
 
         while ($image = $images->fetch_array(MYSQLI_NUM))
         {
@@ -134,13 +131,12 @@ class Game
 
     public function showWinnerImage()
     {
-        global $conn;
 
         $id = $_SESSION['winner'];
 
         $sql = "SELECT * FROM images WHERE id = '$id'";
 
-        $images = $conn->query($sql);
+        $images = $this->connect()->query($sql);
 
         while ($image = $images->fetch_array(MYSQLI_NUM))
         {
@@ -148,64 +144,4 @@ class Game
             echo '<input type=hidden value ="'  . $image[0] . '" name="winner" >';
         }
     }
-
-    public function ifRedirect()
-    {
-        global $conn;
-
-        $sql = "SELECT * FROM images";
-
-        $result = $conn->query($sql);
-
-        if(!isset($_SESSION['account_id']))
-        {
-            header("Location: index.php");
-            exit;
-        }
-
-        if($result->num_rows < 2)
-        {
-            header("Location: index.php");
-            exit;
-        }
-    }
 }
-
-$myGame = new Game();
-
-$myGame->ifRedirect();
-
-$myGame->playGame();
-
-?>
-<!DOCTYPE html>
-<html>
-<?php
-include "resources/head.php";
-?>
-<body>
-    <div class="container">
-        <h1>( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)</h1>
-        <div class="col-sm-6">
-            <form action="game.php" method="post">
-                <?php
-                $myGame->showWinnerImage();
-                ?>
-
-                <button type="submit" class="btn">Send</button>
-            </form>
-        </div>
-        <div class="col-sm-6">
-            <form action="game.php" method="post">
-
-                <?php
-                $myGame->showImage();
-                ?>
-
-                <button type="submit" class="btn">Send</button>
-            </form>
-        </div>
-    </div>
-</body>
-</html>
-

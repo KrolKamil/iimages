@@ -1,40 +1,17 @@
 <?php
     session_start();
 
-    include 'resources/connection.php';
+    require_once '../includes/init.php';
 
-    class Redirect
-    {
-        public function ifRedirect()
-        {
-            if(isset($_SESSION['account_id']))
-            {
-                foreach ($_SESSION['account'] as $role) {
-                    if ($role == 'administrator') {
-                        header("Location: control.php");
-                        exit;
-                    }
-                }
-
-                foreach ($_SESSION['account'] as $role) {
-                    if ($role == 'user') {
-                        header("Location: game.php");
-                        exit;
-                    }
-                }
-            }
-        }
-    }
-
-    $myRedirect = new Redirect();
-
+    $myRedirect = new RedirectForIndex();
     $myRedirect->ifRedirect();
+
 ?>
 <!DOCTYPE html>
 <html>
-    <?php
-    include 'resources/head.php';
-    ?>
+<?php
+include '../includes/head.php';
+?>
 <body>
 
 <div class="container">
